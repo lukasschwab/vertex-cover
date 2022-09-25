@@ -20,7 +20,7 @@ func (c clever) CoverWeight() float32 {
 
 func (c clever) search() float32 {
 	// If you have a cover, halt.
-	if c.covers() {
+	if isCovered(c.g) {
 		return c.weight
 	}
 
@@ -44,9 +44,9 @@ func (c clever) search() float32 {
 	return cprime.search()
 }
 
-func (c clever) covers() bool {
-	for _, v := range c.g.Vertices() {
-		if c.g.Neighbors(v).Length() != 0 {
+func isCovered(g *graph.Weighted) bool {
+	for _, v := range g.Vertices() {
+		if g.Neighbors(v).Length() != 0 {
 			return false
 		}
 	}

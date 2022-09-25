@@ -41,3 +41,14 @@ var GraphC = &Weighted{
 	},
 	weights: map[Vertex]float32{a: 1.5, b: 2, c: 3},
 }
+
+var GraphVaziraniFail = &Weighted{
+	Unweighted: &Unweighted{
+		vertices: map[Vertex]*Neighbors{
+			a: NewNeighbors([]Vertex{b}),
+			b: NewNeighbors([]Vertex{a, c}),
+			c: NewNeighbors([]Vertex{b}),
+		},
+	},
+	weights: map[Vertex]float32{a: 1.5, b: 3, c: 1.5},
+}

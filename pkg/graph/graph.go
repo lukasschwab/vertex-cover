@@ -55,6 +55,18 @@ type Unweighted struct {
 	vertices map[Vertex]*Neighbors
 }
 
+// Edges returns all edges... duplicated. As long as this function is only used
+// for picking a random edge (in Vazirani), this doesn't matter.
+func (u *Unweighted) Edges() [][2]Vertex {
+	edges := [][2]Vertex{}
+	for _, v := range u.Vertices() {
+		for _, neighbor := range u.Neighbors(v).Vertices() {
+			edges = append(edges, [2]Vertex{v, neighbor})
+		}
+	}
+	return edges
+}
+
 func (u *Unweighted) Vertices() []Vertex {
 	vertices := make([]Vertex, len(u.vertices))
 	i := 0
