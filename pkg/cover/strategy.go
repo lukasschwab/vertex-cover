@@ -1,9 +1,7 @@
 package cover
 
-import "github.com/lukasschwab/vertex-cover/pkg/graph"
-
 type Strategy interface {
-	CoverWeight(w *graph.Weighted) float32
+	CoverWeight() float32
 }
 
 type Weight struct {

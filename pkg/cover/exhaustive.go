@@ -6,16 +6,21 @@ import (
 	"github.com/lukasschwab/vertex-cover/pkg/graph"
 )
 
-// Exhaustive implements Strategy.
-type Exhaustive struct {
+// exhaustive implements Strategy.
+type exhaustive struct {
 	*graph.Weighted
 }
 
-func (e Exhaustive) CoverWeight() float32 {
+func NewExhaustive(g *graph.Weighted) Strategy {
+	return exhaustive{g}
+}
+
+func (e exhaustive) CoverWeight() float32 {
+	// TODO: validate !(Weight).noCover
 	return e.search([]graph.Vertex{}, e.Vertices()).float32
 }
 
-func (e Exhaustive) search(included, candidates []graph.Vertex) Weight {
+func (e exhaustive) search(included, candidates []graph.Vertex) Weight {
 	if len(candidates) == 0 {
 		// This is the bottom; check if it's a cover, and bubble up the weight
 		// if it ain't.
@@ -30,7 +35,7 @@ func (e Exhaustive) search(included, candidates []graph.Vertex) Weight {
 	return weightWithout.OrLesser(weightWith)
 }
 
-func (e Exhaustive) weight(included []graph.Vertex) Weight {
+func (e exhaustive) weight(included []graph.Vertex) Weight {
 	fmt.Printf("Evaluating cover: %v\n", included)
 
 	includedSet := graph.NewNeighbors(included)
