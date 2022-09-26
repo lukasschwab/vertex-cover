@@ -80,6 +80,15 @@ func (u *Unweighted) Vertices() []Vertex {
 	return vertices
 }
 
+func (u *Unweighted) Add(a Vertex) {
+	u.vertices[a] = NewNeighbors([]Vertex{})
+}
+
+func (u *Unweighted) Connect(a, b Vertex) {
+	u.vertices[a].vertices[b] = struct{}{}
+	u.vertices[b].vertices[a] = struct{}{}
+}
+
 func (u *Unweighted) Degree(v Vertex) int {
 	return u.vertices[v].Length()
 }
