@@ -1,6 +1,6 @@
 # vertex-cover
 
-Benchmarks for vertex vertex cover algorithms.
+Testing vertex cover algorithms discussed in [Graphs at Work](http://lukasschwab.me/blog/gen/graphs-at-work.html).
 
 ## Runtime
 
