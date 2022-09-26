@@ -1,16 +1,25 @@
 package cover
 
 import (
+	"math"
+
 	"github.com/lukasschwab/vertex-cover/pkg/graph"
+	"github.com/schollz/progressbar/v3"
 )
 
 // exhaustive implements Strategy.
 type exhaustive struct {
 	*graph.Weighted
+	bar *progressbar.ProgressBar
 }
 
+// This is useless. It'l take 15000 hours to check a graph with 45 vertices on
+// my machine.
 func NewExhaustive(g *graph.Weighted) Strategy {
-	return exhaustive{g}
+	pfloat := math.Pow(2, float64(len(g.Vertices())))
+	bar := progressbar.Default(int64(math.Round(pfloat)))
+
+	return exhaustive{g, bar}
 }
 
 func (e exhaustive) CoverWeight() float32 {
@@ -22,6 +31,7 @@ func (e exhaustive) search(included, candidates []graph.Vertex) Weight {
 	if len(candidates) == 0 {
 		// This is the bottom; check if it's a cover, and bubble up the weight
 		// if it ain't.
+		e.bar.Add(1)
 		return e.weight(included)
 	}
 
