@@ -4,6 +4,9 @@ import "fmt"
 
 type Vertex int
 
+// TODO: this currently implements a directed graph, but it's really only meant
+// for use with unidrected graphs (enforced by generator_test.go). Could
+// refactor this neighbors model to enforce undirectedness.
 type Neighbors struct {
 	vertices map[Vertex]struct{}
 }
@@ -55,13 +58,13 @@ type Unweighted struct {
 	vertices map[Vertex]*Neighbors
 }
 
-// Edges returns all edges... duplicated. As long as this function is only used
-// for picking a random edge (in Vazirani), this doesn't matter.
 func (u *Unweighted) Edges() [][2]Vertex {
 	edges := [][2]Vertex{}
 	for _, v := range u.Vertices() {
 		for _, neighbor := range u.Neighbors(v).Vertices() {
-			edges = append(edges, [2]Vertex{v, neighbor})
+			if neighbor >= v {
+				edges = append(edges, [2]Vertex{v, neighbor})
+			}
 		}
 	}
 	return edges

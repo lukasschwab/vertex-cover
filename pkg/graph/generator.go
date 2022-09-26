@@ -3,23 +3,27 @@ package graph
 import "math/rand"
 
 func NewUnweighted(n int, p float32) *Unweighted {
-	u := &Unweighted{
+	g := &Unweighted{
 		vertices: make(map[Vertex]*Neighbors, n),
 	}
-
-	for i := Vertex(0); int(i) < n; i++ {
-		neighbors := &Neighbors{
-			vertices: make(map[Vertex]struct{}),
-		}
-		for candidate := Vertex(0); int(candidate) < n; candidate++ {
-			if rand.Float32() < p {
-				neighbors.vertices[candidate] = struct{}{}
-			}
-		}
-		u.vertices[i] = neighbors
+	// Initiate vertices, empty neighbors.
+	for i := Vertex(0); i < Vertex(n); i++ {
+		g.vertices[i] = NewNeighbors([]Vertex{})
 	}
 
-	return u
+	for _, u := range g.Vertices() {
+		for _, v := range g.Vertices() {
+			if u <= v {
+				if rand.Float32() < p {
+					// TODO: refactor. Blech.
+					g.vertices[u].vertices[v] = struct{}{}
+					g.vertices[v].vertices[u] = struct{}{}
+				}
+			}
+		}
+	}
+
+	return g
 }
 
 // type weigher func(Vertex, *Neighbors) float32

@@ -11,7 +11,12 @@ func TestNewUnweighted(t *testing.T) {
 	g := NewUnweighted(n, 0.5)
 	assert.Len(t, g.Vertices(), n)
 
-	g.Print()
+	// Undirected graph.
+	for _, v := range g.Vertices() {
+		for other := range g.Neighbors(v).vertices {
+			assert.Contains(t, g.Neighbors(other).vertices, v)
+		}
+	}
 }
 
 func TestNewWeighted(t *testing.T) {
@@ -23,6 +28,10 @@ func TestNewWeighted(t *testing.T) {
 	for _, weight := range g.weights {
 		assert.Equal(t, weight, float32(w))
 	}
-
-	g.Print()
+	// Undirected graph.
+	for _, v := range g.Vertices() {
+		for _, other := range g.Neighbors(v).Vertices() {
+			assert.Contains(t, g.Neighbors(other).Vertices(), v)
+		}
+	}
 }
