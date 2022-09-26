@@ -1,7 +1,6 @@
 package cover
 
 import (
-	"fmt"
 	"math/rand"
 
 	"github.com/lukasschwab/vertex-cover/pkg/graph"
@@ -31,7 +30,6 @@ func (v *vazirani) CoverWeight() float32 {
 }
 
 func (v *vazirani) search() float32 {
-	v.g.Print()
 
 	// While Vreq is not a vertex cover...
 	if isCovered(v.g) {
@@ -40,11 +38,11 @@ func (v *vazirani) search() float32 {
 
 	// Pick an uncovered edge, say (u, v).
 	edges := v.g.Edges()
-	fmt.Printf("Ts: %v\n", v.t)
+	// fmt.Printf("Ts: %v\n", v.t)
 	edge := edges[rand.Intn(len(edges))]
 	vertexU, vertexV := edge[0], edge[1]
 
-	fmt.Printf("%v (%v) -> %v (%v)\n\n", vertexU, v.g.Weight(vertexU), vertexV, v.g.Weight(vertexV))
+	// fmt.Printf("%v (%v) -> %v (%v)\n\n", vertexU, v.g.Weight(vertexU), vertexV, v.g.Weight(vertexV))
 
 	// Let m = min (t(u), t(v)).
 	m := v.t[vertexV]
@@ -55,7 +53,10 @@ func (v *vazirani) search() float32 {
 	// t(u) ← t(u) − m.
 	v.t[vertexU] -= m
 	// t(v) ← t(v) − m.
-	v.t[vertexV] -= m
+	// Prevent self-edges from causing oscillations.
+	if vertexV != vertexU {
+		v.t[vertexV] -= m
+	}
 
 	// Include in Vreq all vertices having t(v) = 0.
 	if v.t[vertexU] == float32(0) {
@@ -67,5 +68,8 @@ func (v *vazirani) search() float32 {
 		v.g = v.g.Without(vertexV)
 	}
 
+	// fmt.Printf("%v\n", v.g.Vertices())
+	// fmt.Printf("%v\n", v.g.Edges())
+	// fmt.Printf("%v\n", v.t)
 	return v.search()
 }

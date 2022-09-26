@@ -1,8 +1,6 @@
 package cover
 
 import (
-	"fmt"
-
 	"github.com/lukasschwab/vertex-cover/pkg/graph"
 )
 
@@ -36,8 +34,6 @@ func (e exhaustive) search(included, candidates []graph.Vertex) Weight {
 }
 
 func (e exhaustive) weight(included []graph.Vertex) Weight {
-	fmt.Printf("Evaluating cover: %v\n", included)
-
 	includedSet := graph.NewNeighbors(included)
 
 	var totalWeight float32 = 0
@@ -54,8 +50,6 @@ func (e exhaustive) weight(included []graph.Vertex) Weight {
 			}
 		}
 	}
-
-	fmt.Printf("It covers; got weight: %v\n", totalWeight)
 
 	// It's a cover! Calculate the weight.
 	return Weight{float32: totalWeight}
