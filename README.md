@@ -11,3 +11,27 @@ I originally reached for Go because of the `testing` benchmark tooling, which I 
 + Consider converting deeply-recursive searches to iteration.
 
 So maybe I would've been happier in Python.
+
+## Variables
+
++ Graph topology
+    + Pseudorandom
+        + n vertices: would be more interesting looking at runtime. In general, prefer large n here (less artifacting).
+        + p probability of a possible edge in g existing.
+    + Antagonistic: see the family described in Lavrov, implemented in `NewTricky`. Have $a*Hk$ nodes for $a$, $k<a$, where $H_k$ is the $k$th harmonic number.
++ Vertex weights
+    + Uniform
+    + Random
+    + Degree-correlated (positive, negative). Negative correlation makes for delicious greedy cases.
++ Strategy
+    + Vazirani
+    + Clever
+    + Exhaustive: basically useless, even for moderate n. 2^n grows fast.
+
+## Project structure
+
+Can put experiment scaffolding in some pkg, then different experiments in different cmd. Each README can describe the experiment.
+
+## To do
+
++ Docstrings and style.
