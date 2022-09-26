@@ -1,7 +1,6 @@
 package graph
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 )
@@ -90,11 +89,9 @@ func NewTricky(a, k int, w weigher) *Weighted {
 
 	// Bs := make([][]Vertex, k-1)
 	for i := 2; i <= k; i++ {
-		fmt.Printf("Adding B group %v\n", i)
 		Ai := 0
 		// Construct the ith B-set.
 		Bi := make([]Vertex, int(math.Floor(float64(a)/float64(i))))
-		// fmt.Printf("It has %v members\n", len(Bi))
 		for j := range Bi {
 			Bi[j] = g.next()
 			graph.Add(Bi[j])

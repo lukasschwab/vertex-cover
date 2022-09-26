@@ -14,5 +14,8 @@ func TestClever(t *testing.T) {
 	assert.Equal(t, float32(3.5), NewClever(graph.GraphC).CoverWeight())
 }
 
-// TODO: test clever against the adversarial bipartite graph it's known to fail
-// against.
+func TestClever_Tricky(t *testing.T) {
+	// Assert clever performs as Lavrov predicts.
+	g := graph.NewTricky(20, 5, graph.Uniform(1))
+	assert.Equal(t, NewClever(g).CoverWeight(), float32(25))
+}

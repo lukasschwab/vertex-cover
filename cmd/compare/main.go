@@ -12,6 +12,15 @@ const (
 	reps = 5
 )
 
+// func main() {
+// 	g := graph.NewTricky(20, 5, graph.Uniform(1))
+// 	// opt := cover.NewExhaustive(g).CoverWeight()
+// 	// fmt.Printf("Optimal performance: %v\n", opt)
+// 	clever := cover.NewClever(g).CoverWeight()
+// 	fmt.Printf("Clever performance: %v\n", clever)
+// 	fmt.Println("25 is the number of vertices in the B-set; for large k, this gets really bad!")
+// }
+
 func main() {
 	data := make([][]float32, 10)
 	for i := range data {
