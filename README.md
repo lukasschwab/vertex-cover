@@ -18,9 +18,9 @@ So maybe I would've been happier in Python.
     + Pseudorandom
         + n vertices: would be more interesting looking at runtime. In general, prefer large n here (less artifacting).
         + p probability of a possible edge in g existing.
-    + Antagonistic: see the family described in Lavrov, implemented in `NewTricky`. Have $a*Hk$ nodes for $a$, $k<a$, where $H_k$ is the $k$th harmonic number.
+    + Antagonistic: see the family described in Lavrov, implemented in `NewTricky`. Have $a*Hk$ nodes for $a, k < a$, where $H_k$ is the $k\text{th}$ harmonic number.
         + Because these vertices are always selected (by degree) and they have arbitrary weight, there's no bound on the performance vs optimum.
-        + Also I guess you're always taking $(\floor Hk\floor - 1)a$ vertices.
+        + Also I guess you're always taking $(\lfloor Hk\rfloor - 1)a$ vertices.
 + Vertex weights
     + Uniform
     + Random
@@ -28,8 +28,8 @@ So maybe I would've been happier in Python.
 + Strategy
     + Vazirani
     + Clever
-    + Lavrov: like Clever, but picks the edge with highest incident degree and takes *both* vertices. Outperforms clever on tricky graphs with high k.
-    + Exhaustive: basically useless, even for moderate n. 2^n grows fast.
+    + Lavrov: like Clever, but picks the edge with highest incident degree and takes *both* vertices. Outperforms clever on tricky graphs with high $k$.
+    + Exhaustive: basically useless, even for moderate $n$. $2^n$ grows fast.
 
 ## Project structure
 
