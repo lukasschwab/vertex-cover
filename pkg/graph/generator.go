@@ -67,7 +67,7 @@ func (g *vertexGenerator) next() Vertex {
 // clever solution.
 //
 // - a: the number of vertices in the true minimal set a.
-// - k: the number of b-groups.
+// - k: the number of b-groups. k ≤ a.
 //
 // The resulting graph has n vertices where n = a * Hk, for the kth harmonic Hk.
 // https://en.wikipedia.org/wiki/Harmonic_number
@@ -102,7 +102,7 @@ func NewTricky(a, k int, w weigher) *Weighted {
 		}
 		// Divvy up remaining connections to A.
 		bi := 0
-		for Ai < len(A) {
+		for Ai < len(A) && bi < len(Bi) {
 			// TODO: Connect Bi[bi] to A[Ai].
 			graph.Connect(Bi[bi], A[Ai])
 			Ai++
