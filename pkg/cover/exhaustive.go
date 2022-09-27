@@ -23,6 +23,10 @@ func NewExhaustive(g *graph.Weighted) Strategy {
 }
 
 func (e exhaustive) CoverWeight() float32 {
+	// How to speed up?
+	// Prune verties with <=1 edge, then force the inclusion of the new fringe? A little complicated. Isolated barbells.
+	// Auto-add self-linked vertices to the cover.
+
 	// TODO: validate !(Weight).noCover
 	return e.search([]graph.Vertex{}, e.Vertices()).float32
 }
