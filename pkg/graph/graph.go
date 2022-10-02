@@ -1,8 +1,17 @@
 package graph
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/opts"
+)
 
 type Vertex int
+
+func (v Vertex) String() string {
+	return fmt.Sprintf("%d", v)
+}
 
 // TODO: this currently implements a directed graph, but it's really only meant
 // for use with unidrected graphs (enforced by generator_test.go). Could
@@ -102,6 +111,36 @@ func (u *Unweighted) Print() {
 	for v, neighbors := range u.vertices {
 		fmt.Printf("\t%v: %v (%v)\n", v, neighbors.vertices, u.Degree(v))
 	}
+}
+
+// Display based on https://github.com/go-echarts/examples/blob/master/examples/graph.go
+//
+// TODO: move this onto Weighted and display the vertex weights.
+func (u *Unweighted) Display(title string) *charts.Graph {
+	graph := charts.NewGraph()
+	graph.SetGlobalOptions(
+		charts.WithTitleOpts(opts.Title{Title: title}),
+	)
+
+	nodes := make([]opts.GraphNode, len(u.Vertices()))
+	links := []opts.GraphLink{}
+	for i, v := range u.Vertices() {
+		nodes[i] = opts.GraphNode{Name: fmt.Sprintf("%d", v)}
+		for _, neighbor := range u.Neighbors(v).Vertices() {
+			// TODO: include edge weights for weighted graphs.
+			links = append(links, opts.GraphLink{Source: v.String(), Target: neighbor.String()})
+		}
+	}
+
+	graph.AddSeries("graph", nodes, links).SetSeriesOptions(
+		charts.WithGraphChartOpts(opts.GraphChart{
+			Force:  &opts.GraphForce{Repulsion: 8000},
+			Layout: "circular",
+		}),
+		charts.WithLabelOpts(opts.Label{Show: true, Position: "right"}),
+	)
+
+	return graph
 }
 
 // NOTE: this would be faster if it were destructive.

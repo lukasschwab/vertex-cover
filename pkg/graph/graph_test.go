@@ -26,3 +26,8 @@ func TestNeighbors_Without(t *testing.T) {
 	assert.Len(t, nprime.vertices, 2)
 	assert.NotContains(t, nprime.vertices, removed)
 }
+
+func TestVertex_String(t *testing.T) {
+	assert.Equal(t, "0", Vertex(0).String())
+	assert.Equal(t, "18", Vertex(18).String())
+}
