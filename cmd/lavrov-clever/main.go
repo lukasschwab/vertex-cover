@@ -13,7 +13,7 @@ import (
 func main() {
 	for a := 20; a <= 100; a++ {
 		for k := 5; k <= a; k++ {
-			g := graph.NewTricky(a, k, graph.Uniform(1))
+			g := graph.NewTricky(a, k, graph.Uniform{})
 			// opt := 2 * a
 			clever := cover.NewClever(g).CoverWeight()
 			lavrov := cover.NewLavrov(g).CoverWeight()

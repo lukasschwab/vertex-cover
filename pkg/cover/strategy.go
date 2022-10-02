@@ -1,9 +1,12 @@
 package cover
 
+// Strategy (algorithm) for finding a small vertex cover.
 type Strategy interface {
 	CoverWeight() float32
 }
 
+// Weight of a candidate vertex cover. noCover indicates the candidate isn't a
+// vertex cover on its graph.
 type Weight struct {
 	float32
 	noCover bool

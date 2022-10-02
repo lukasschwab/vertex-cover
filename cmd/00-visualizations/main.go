@@ -24,7 +24,7 @@ func main() {
 
 	page = components.NewPage()
 	page.AddCharts(
-		graph.NewTricky(20, 5, graph.Uniform(1)).Display("Lavrov's example"),
+		graph.NewTricky(20, 5, graph.Uniform{}).Display("Lavrov's example"),
 	)
 	f, err = os.Create("out/tricky.html")
 	if err != nil {
@@ -35,7 +35,7 @@ func main() {
 	page = components.NewPage()
 	for p := float32(0); p <= 1.0; p += 0.1 {
 		page.AddCharts(
-			graph.NewWeighted(10, p, graph.Uniform(0)).
+			graph.NewWeighted(10, p, graph.Uniform{}).
 				Display(fmt.Sprintf("p=%.1f", p)),
 		)
 	}

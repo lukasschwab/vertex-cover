@@ -16,6 +16,6 @@ func TestClever(t *testing.T) {
 
 func TestClever_Tricky(t *testing.T) {
 	// Assert clever performs as Lavrov predicts.
-	g := graph.NewTricky(20, 5, graph.Uniform(1))
+	g := graph.NewTricky(20, 5, graph.Uniform{})
 	assert.Equal(t, NewClever(g).CoverWeight(), float32(25))
 }

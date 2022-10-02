@@ -7,12 +7,16 @@ import (
 	"github.com/go-echarts/go-echarts/v2/opts"
 )
 
+// Vertex in a graph. The int representation is an ID rather than a weight.
 type Vertex int
 
+// String name for v.
 func (v Vertex) String() string {
 	return fmt.Sprintf("%d", v)
 }
 
+// Neighbors of some vertex in a graph: a set of other vertices in the graph.
+//
 // TODO: this currently implements a directed graph, but it's really only meant
 // for use with unidrected graphs (enforced by generator_test.go). Could
 // refactor this neighbors model to enforce undirectedness.
@@ -20,10 +24,12 @@ type Neighbors struct {
 	vertices map[Vertex]struct{}
 }
 
+// Length of the list of neighbor vertices ns.
 func (ns *Neighbors) Length() int {
 	return len(ns.vertices)
 }
 
+// Without returns ns minus a removed vertex.
 func (ns *Neighbors) Without(removed Vertex) *Neighbors {
 	new := &Neighbors{
 		vertices: make(map[Vertex]struct{}, len(ns.vertices)),
@@ -36,11 +42,13 @@ func (ns *Neighbors) Without(removed Vertex) *Neighbors {
 	return new
 }
 
+// Includes returns whether v is among the vertices in ns.
 func (ns *Neighbors) Includes(v Vertex) bool {
 	_, ok := ns.vertices[v]
 	return ok
 }
 
+// Vertices (neighbors) in ns.
 func (ns *Neighbors) Vertices() []Vertex {
 	vs := make([]Vertex, len(ns.vertices))
 	i := 0
@@ -51,6 +59,7 @@ func (ns *Neighbors) Vertices() []Vertex {
 	return vs
 }
 
+// NewNeighbors returns an empty [Neighbors] set.
 func NewNeighbors(vs []Vertex) *Neighbors {
 	new := &Neighbors{
 		vertices: make(map[Vertex]struct{}, len(vs)),
@@ -61,12 +70,14 @@ func NewNeighbors(vs []Vertex) *Neighbors {
 	return new
 }
 
+// Unweighted graph.
 type Unweighted struct {
 	// vertices stored as maps from the vertex to all of its neighbors; an
 	// adjacency matrix.
 	vertices map[Vertex]*Neighbors
 }
 
+// Edges in u.
 func (u *Unweighted) Edges() [][2]Vertex {
 	edges := [][2]Vertex{}
 	for _, v := range u.Vertices() {
@@ -79,6 +90,7 @@ func (u *Unweighted) Edges() [][2]Vertex {
 	return edges
 }
 
+// Vertices of u.
 func (u *Unweighted) Vertices() []Vertex {
 	vertices := make([]Vertex, len(u.vertices))
 	i := 0
@@ -89,23 +101,28 @@ func (u *Unweighted) Vertices() []Vertex {
 	return vertices
 }
 
+// Add a vertex to u.
 func (u *Unweighted) Add(a Vertex) {
 	u.vertices[a] = NewNeighbors([]Vertex{})
 }
 
+// Connect vertices a, b in u.
 func (u *Unweighted) Connect(a, b Vertex) {
 	u.vertices[a].vertices[b] = struct{}{}
 	u.vertices[b].vertices[a] = struct{}{}
 }
 
+// Degree of v in u.
 func (u *Unweighted) Degree(v Vertex) int {
 	return u.vertices[v].Length()
 }
 
+// Neighbors of v in u.
 func (u *Unweighted) Neighbors(v Vertex) *Neighbors {
 	return u.vertices[v]
 }
 
+// Print a summary of u.
 func (u *Unweighted) Print() {
 	fmt.Printf("Graph with size %v:\n", len(u.vertices))
 	for v, neighbors := range u.vertices {
@@ -143,6 +160,9 @@ func (u *Unweighted) Display(title string) *charts.Graph {
 	return graph
 }
 
+// Without returns u minus a removed vertex, its weights, and its incident
+// edges.
+//
 // NOTE: this would be faster if it were destructive.
 func (u *Unweighted) Without(removed Vertex) *Unweighted {
 	new := &Unweighted{
@@ -156,15 +176,19 @@ func (u *Unweighted) Without(removed Vertex) *Unweighted {
 	return new
 }
 
+// Weighted graph, with weighted vertices.
 type Weighted struct {
 	*Unweighted
 	weights map[Vertex]float32
 }
 
+// Weight of a vertex in w.
 func (w *Weighted) Weight(v Vertex) float32 {
 	return w.weights[v]
 }
 
+// Without returns w minus a removed vertex, its weights, and its incident
+// edges.
 func (w *Weighted) Without(removed Vertex) *Weighted {
 	new := &Weighted{
 		Unweighted: w.Unweighted.Without(removed),
@@ -178,6 +202,7 @@ func (w *Weighted) Without(removed Vertex) *Weighted {
 	return new
 }
 
+// Print a summary of w.
 func (w *Weighted) Print() {
 	w.Unweighted.Print()
 	fmt.Printf("Weights: %v\n", w.weights)

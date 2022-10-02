@@ -7,6 +7,8 @@ type clever struct {
 	g      *graph.Weighted
 }
 
+// NewClever returns the "Clever" unweighted vertex cover Strategy described in
+// "Graphs at Work:" http://lukasschwab.me/blog/gen/graphs-at-work.html
 func NewClever(g *graph.Weighted) Strategy {
 	return clever{
 		weight: 0,
@@ -14,6 +16,7 @@ func NewClever(g *graph.Weighted) Strategy {
 	}
 }
 
+// CoverWeight implements Strategy.
 func (c clever) CoverWeight() float32 {
 	return c.search()
 }

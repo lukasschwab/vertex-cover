@@ -13,8 +13,11 @@ type exhaustive struct {
 	bar *progressbar.ProgressBar
 }
 
-// This is useless. It'l take 15000 hours to check a graph with 45 vertices on
-// my machine.
+// NewExhaustive returns a Strategy that checks every one of the 2^n subgraphs
+// of a graph with n vertices.
+//
+// This is basically useless. It'l take 15000 hours to check a graph with 45
+// vertices on my machine.
 func NewExhaustive(g *graph.Weighted) Strategy {
 	pfloat := math.Pow(2, float64(len(g.Vertices())))
 	bar := progressbar.Default(int64(math.Round(pfloat)))
@@ -50,7 +53,7 @@ func (e exhaustive) search(included, candidates []graph.Vertex) Weight {
 func (e exhaustive) weight(included []graph.Vertex) Weight {
 	includedSet := graph.NewNeighbors(included)
 
-	var totalWeight float32 = 0
+	var totalWeight float32
 	for _, v := range e.Vertices() {
 		// Either v is in the set cover...
 		if includedSet.Includes(v) {

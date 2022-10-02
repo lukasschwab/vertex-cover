@@ -12,6 +12,11 @@ type vazirani struct {
 	t      map[graph.Vertex]float32
 }
 
+// NewVazirani implements Vazirani's algorithm for weighted vertex cover,
+// described in
+//
+// + "Approximation Algorithms" (Vazirani 2001)
+// + "Graphs at Work:" http://lukasschwab.me/blog/gen/graphs-at-work.html
 func NewVazirani(g *graph.Weighted) Strategy {
 	t := make(map[graph.Vertex]float32, len(g.Vertices()))
 	for _, v := range g.Vertices() {

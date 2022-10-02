@@ -9,6 +9,11 @@ type lavrov struct {
 	g      *graph.Weighted
 }
 
+// NewLavrov returns a Strategy implementing Lavrov's aglorithm for unweighted
+// vertex cover, described in
+//
+// + "Lecture 36: Approximation Algorithms" (2020)
+// + "Graphs at Work:" http://lukasschwab.me/blog/gen/graphs-at-work.html
 func NewLavrov(g *graph.Weighted) Strategy {
 	return lavrov{
 		weight: 0,

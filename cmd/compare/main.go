@@ -33,7 +33,7 @@ func main() {
 		for n := 5; n <= 100; n += 5 {
 			for rep := 0; rep < reps; rep++ {
 				// g := graph.NewTricky(20, 5, graph.Uniform(1))
-				g := graph.NewWeighted(n, p, graph.Uniform(1))
+				g := graph.NewWeighted(n, p, graph.Uniform{})
 				outcomes := test(g)
 				data[i][j] += (outcomes["clever"] - outcomes["vazirani"])
 			}
