@@ -43,6 +43,24 @@ func (u Uniform) weigh(v Vertex, ns *Neighbors) float32 {
 	return float32(u)
 }
 
+type Random struct{}
+
+func (r Random) weigh(v Vertex, ns *Neighbors) float32 {
+	return rand.Float32()
+}
+
+type DegreeNegative struct{}
+
+func (d DegreeNegative) weigh(v Vertex, ns *Neighbors) float32 {
+	return 1.0 / (float32(ns.Length()) - 0.0001)
+}
+
+type DegreePositive struct{}
+
+func (d DegreePositive) weigh(v Vertex, ns *Neighbors) float32 {
+	return float32(ns.Length())
+}
+
 func NewWeighted(n int, p float32, w weigher) *Weighted {
 	weighted := &Weighted{
 		Unweighted: NewUnweighted(n, p),
