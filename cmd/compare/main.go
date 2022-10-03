@@ -42,7 +42,6 @@ func main() {
 		i++
 	}
 
-	// fmt.Println("%v\n", data)
 	for _, row := range data {
 		for _, sum := range row {
 			fmt.Printf("%.3f,", sum/reps)
