@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"math"
 	"os"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -14,15 +15,23 @@ import (
 )
 
 const (
-	// Number of vertices.
-	nMin  = 10
-	nMax  = 100
-	nStep = 10
+	aMin  = 20
+	aMax  = 100
+	aStep = 10
 
-	// Edge probability.
-	pMin  = float32(0.1)
-	pMax  = 1
-	pStep = 0.05
+	kMin  = float32(0.1)
+	kMax  = 1
+	kStep = 0.1
+
+	// // Number of vertices.
+	// nMin  = 10
+	// nMax  = 100
+	// nStep = 10
+
+	// // Edge probability.
+	// pMin  = float32(0.1)
+	// pMax  = 1
+	// pStep = 0.05
 )
 
 // Number of random graphs to run against
@@ -37,39 +46,59 @@ func main() {
 			return cover.NewClever(g)
 		},
 	}
+	run(comp, "Clever")
 
+	comp.Test = func(g *graph.Weighted) cover.Strategy {
+		return cover.NewLavrov(g)
+	}
+	run(comp, "Lavrov")
+}
+
+func run(c cover.Comparison, testName string) {
 	ns := []int{}
 	ps := []string{}
 	series := []opts.HeatMapData{}
 
-	pb := progressbar.New((nMax - nMin) / nStep)
+	pb := progressbar.New((aMax - aMin) / aStep)
+
 	nIndex := 0
-	for n := nMin; n <= nMax; n += nStep {
-		ns = append(ns, n)
+	for a := aMin; a <= aMax; a += aStep {
+		ns = append(ns, a)
 		pIndex := 0
 		// BODGE: only want one set of ps.
 		ps = []string{}
-		for p := pMin; p <= pMax; p += pStep {
-			ps = append(ps, fmt.Sprintf("%.2f", p))
-			pb.Describe(fmt.Sprintf("n=%d, p=%.2f", n, p))
+
+		for k := kMin; k <= kMax; k += kStep {
+			kActual := int(math.Round(float64(k) * float64(a)))
+			ps = append(ps, fmt.Sprintf("%.2f", k))
+			pb.Describe(fmt.Sprintf("%v: a=%d, k=%.2f, kn=%.2f", testName, a, k, k*float32(a)))
 			var sumDeltas float32 = 0
 			for i := 0; i <= reps; i++ {
-				g := graph.NewWeighted(n, p, graph.Uniform{})
-				res := comp.Run(g)
+				g := graph.NewTricky(a, kActual, graph.Uniform{})
+
+				// g := graph.NewWeighted(n, p, graph.Uniform{})
+				res := c.Run(g)
 				// sumDeltas += res.Delta()
 				// NOTE: trying normalization.
+				if a == 10 && k == 0.1 {
+					fmt.Printf("CUR RESULTS: %+v\n", res)
+				}
+
 				sumDeltas += (res.Delta() / res.Baseline) * 100
 			}
 			mean := sumDeltas / reps
-			series = append(series, opts.HeatMapData{Value: [3]interface{}{fmt.Sprintf("%.2f", p), nIndex, mean}})
+			series = append(series, opts.HeatMapData{
+				Value: [3]interface{}{fmt.Sprintf("%.2f", k), nIndex, mean},
+				Name:  fmt.Sprintf("a=%v, k=%v", a, kActual),
+			})
 			pIndex++
 		}
 		pb.Add(1)
 		nIndex++
 	}
 
-	heatMap := heatMapBase(ns)
-	fmt.Printf("PS: %v\n", ps)
+	heatMap := heatMapBase(testName, ns)
+	fmt.Printf("K ratios: %v\n", ps)
 	heatMap.SetXAxis(ps).AddSeries("means", series)
 
 	heatMap.Validate()
@@ -77,23 +106,25 @@ func main() {
 	page := components.NewPage()
 	page.AddCharts(heatMap)
 
-	f, _ := os.Create("out/clever-vazirani.html")
-	page.Render(io.MultiWriter(f))
+	f, _ := os.Create(fmt.Sprintf("out/%v-vazirani.html", testName))
+	if err := page.Render(io.MultiWriter(f)); err != nil {
+		fmt.Printf("Error rendering: %v", err)
+	}
 }
 
-func heatMapBase(yAxisData interface{}) *charts.HeatMap {
+func heatMapBase(testName string, yAxisData interface{}) *charts.HeatMap {
 	hm := charts.NewHeatMap()
 	hm.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
-			Title: "Clever - Vazirani on random graphs",
+			Title: fmt.Sprintf("%v - Vazirani on tricky graphs", testName),
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
-			Name:      "p",
+			Name:      "k ratio",
 			Type:      "category",
 			SplitArea: &opts.SplitArea{Show: true},
 		}),
 		charts.WithYAxisOpts(opts.YAxis{
-			Name: "n",
+			Name: "a",
 			Type: "category",
 			Data: yAxisData,
 			AxisLabel: &opts.AxisLabel{
@@ -105,8 +136,8 @@ func heatMapBase(yAxisData interface{}) *charts.HeatMap {
 		}),
 		charts.WithVisualMapOpts(opts.VisualMap{
 			Calculable: true,
-			Min:        -50,
-			Max:        50,
+			Min:        -100,
+			Max:        100,
 			Text:       []string{"% Worse", "% Better"},
 			InRange: &opts.VisualMapInRange{
 				Color: []string{"#50a3ba", "#eac736", "#d94e5d"},
