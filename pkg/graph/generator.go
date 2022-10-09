@@ -33,25 +33,28 @@ func NewUnweighted(n int, p float32) *Unweighted {
 	return g
 }
 
-type weigher interface {
+// TODO; make the weigher types internal, move them to their own file, and
+// export them as vars instead of types.
+
+type Weigher interface {
 	weigh(Vertex, *Neighbors) float32
 }
 
-// Uniform weigher. Every vertex gets weight 1.
+// Uniform Weigher. Every vertex gets weight 1.
 type Uniform struct{}
 
 func (u Uniform) weigh(v Vertex, ns *Neighbors) float32 {
 	return float32(1)
 }
 
-// Random weigher. Every vertex gets a pseudorandom weight on [0, 1).
+// Random Weigher. Every vertex gets a pseudorandom weight on [0, 1).
 type Random struct{}
 
 func (r Random) weigh(v Vertex, ns *Neighbors) float32 {
 	return rand.Float32()
 }
 
-// DegreeNegative weigher gives each vertex a weight inversely proportional to
+// DegreeNegative Weigher gives each vertex a weight inversely proportional to
 // its degree.
 type DegreeNegative struct{}
 
@@ -67,7 +70,7 @@ func (d DegreePositive) weigh(v Vertex, ns *Neighbors) float32 {
 }
 
 // NewWeighted graph with w-determined weights bolted onto [NewUnweighted].
-func NewWeighted(n int, p float32, w weigher) *Weighted {
+func NewWeighted(n int, p float32, w Weigher) *Weighted {
 	weighted := &Weighted{
 		Unweighted: NewUnweighted(n, p),
 		weights:    make(map[Vertex]float32, n),
@@ -98,7 +101,7 @@ func (g *vertexGenerator) next() Vertex {
 //
 // Lavrov describes this construction on page 2:
 // https://faculty.math.illinois.edu/~mlavrov/docs/482-spring-2020/lecture36.pdf
-func NewTricky(a, k int, w weigher) *Weighted {
+func NewTricky(a, k int, w Weigher) *Weighted {
 	graph := &Unweighted{vertices: make(map[Vertex]*Neighbors)}
 
 	// https://faculty.math.illinois.edu/~mlavrov/docs/482-spring-2020/lecture36.pdf
