@@ -52,9 +52,9 @@ func main() {
 		for p := pMin; p <= pMax; p += pStep {
 			ps = append(ps, fmt.Sprintf("%.2f", p))
 			pb.Describe(fmt.Sprintf("n=%d, p=%.2f", n, p))
-			var sumDeltas float32 = 0
+			var sumDeltas float32
 			for i := 0; i <= reps; i++ {
-				g := graph.NewWeighted(n, p, graph.Uniform{})
+				g := graph.NewWeighted(n, p, graph.Uniform)
 				res := comp.Run(g)
 				// sumDeltas += res.Delta()
 				// NOTE: trying normalization.

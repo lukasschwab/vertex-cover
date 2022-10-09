@@ -74,7 +74,7 @@ func run(c cover.Comparison, testName string) {
 			pb.Describe(fmt.Sprintf("%v: a=%d, k=%.2f, kn=%.2f", testName, a, k, k*float32(a)))
 			var sumDeltas float32 = 0
 			for i := 0; i <= reps; i++ {
-				g := graph.NewTricky(a, kActual, graph.Uniform{})
+				g := graph.NewTricky(a, kActual, graph.Uniform)
 
 				// g := graph.NewWeighted(n, p, graph.Uniform{})
 				res := c.Run(g)

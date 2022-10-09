@@ -26,10 +26,10 @@ var comparisons = map[string]cover.Comparison{
 }
 
 var weighers = map[string]graph.Weigher{
-	"uniform":        graph.Uniform{},
-	"random":         graph.Random{},
-	"degreeNegative": graph.DegreeNegative{},
-	"degreePositive": graph.DegreePositive{},
+	"uniform":        graph.Uniform,
+	"random":         graph.Random,
+	"degreeNegative": graph.DegreeNegative,
+	"degreePositive": graph.DegreePositive,
 }
 
 func main() {

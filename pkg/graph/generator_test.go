@@ -21,7 +21,7 @@ func TestNewUnweighted(t *testing.T) {
 
 func TestNewWeighted(t *testing.T) {
 	n := 10
-	g := NewWeighted(n, 0.5, Uniform{})
+	g := NewWeighted(n, 0.5, Uniform)
 	assert.Len(t, g.Vertices(), n)
 	assert.Len(t, g.weights, n)
 	for _, weight := range g.weights {
@@ -39,7 +39,7 @@ func TestNewTricky(t *testing.T) {
 	// Test the example graph: https://faculty.math.illinois.edu/~mlavrov/docs/482-spring-2020/lecture36.pdf
 	n := 20
 	k := 5
-	g := NewTricky(n, k, Uniform{})
+	g := NewTricky(n, k, Uniform)
 	assert.Len(t, g.Vertices(), 45)
 	// A vertices.
 	for v := Vertex(0); v < Vertex(20); v++ {

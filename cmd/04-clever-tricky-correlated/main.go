@@ -72,9 +72,9 @@ func run(c cover.Comparison, testName string) {
 			kActual := int(math.Round(float64(k) * float64(a)))
 			ps = append(ps, fmt.Sprintf("%.2f", k))
 			pb.Describe(fmt.Sprintf("%v: a=%d, k=%.2f, kn=%.2f", testName, a, k, k*float32(a)))
-			var sumDeltas float32 = 0
+			var sumDeltas float32
 			for i := 0; i <= reps; i++ {
-				g := graph.NewTricky(a, kActual, graph.DegreePositive{})
+				g := graph.NewTricky(a, kActual, graph.DegreePositive)
 
 				// g := graph.NewWeighted(n, p, graph.Uniform{})
 				res := c.Run(g)

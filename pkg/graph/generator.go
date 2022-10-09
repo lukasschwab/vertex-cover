@@ -33,42 +33,6 @@ func NewUnweighted(n int, p float32) *Unweighted {
 	return g
 }
 
-// TODO; make the weigher types internal, move them to their own file, and
-// export them as vars instead of types.
-
-type Weigher interface {
-	weigh(Vertex, *Neighbors) float32
-}
-
-// Uniform Weigher. Every vertex gets weight 1.
-type Uniform struct{}
-
-func (u Uniform) weigh(v Vertex, ns *Neighbors) float32 {
-	return float32(1)
-}
-
-// Random Weigher. Every vertex gets a pseudorandom weight on [0, 1).
-type Random struct{}
-
-func (r Random) weigh(v Vertex, ns *Neighbors) float32 {
-	return rand.Float32()
-}
-
-// DegreeNegative Weigher gives each vertex a weight inversely proportional to
-// its degree.
-type DegreeNegative struct{}
-
-func (d DegreeNegative) weigh(v Vertex, ns *Neighbors) float32 {
-	return 1.0 / (float32(ns.Length()) - 0.0001)
-}
-
-// DegreePositive gives each vertex a weight equal to its degree.
-type DegreePositive struct{}
-
-func (d DegreePositive) weigh(v Vertex, ns *Neighbors) float32 {
-	return float32(ns.Length())
-}
-
 // NewWeighted graph with w-determined weights bolted onto [NewUnweighted].
 func NewWeighted(n int, p float32, w Weigher) *Weighted {
 	weighted := &Weighted{
