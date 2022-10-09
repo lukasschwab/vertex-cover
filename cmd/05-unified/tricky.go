@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 
+	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/lukasschwab/vertex-cover/pkg/cover"
@@ -24,7 +25,11 @@ const (
 	kStep = 0.1
 )
 
-func runTricky(comparison cover.Comparison, weigher graph.Weigher, nameStub string) {
+func runTricky(
+	comparison cover.Comparison,
+	weigher graph.Weigher,
+	nameStub string,
+) *charts.HeatMap {
 	name := fmt.Sprintf("%s-tricky", nameStub)
 	pb := progressbar.New((aMax - aMin) / aStep)
 
@@ -70,4 +75,6 @@ func runTricky(comparison cover.Comparison, weigher graph.Weigher, nameStub stri
 
 	f, _ := os.Create(fmt.Sprintf("out/%s.html", name))
 	page.Render(io.MultiWriter(f))
+
+	return heatMap
 }

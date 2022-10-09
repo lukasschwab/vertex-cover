@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/lukasschwab/vertex-cover/pkg/cover"
@@ -25,7 +26,11 @@ const (
 	pStep = 0.05
 )
 
-func runRandom(comparison cover.Comparison, weigher graph.Weigher, nameStub string) {
+func runRandom(
+	comparison cover.Comparison,
+	weigher graph.Weigher,
+	nameStub string,
+) *charts.HeatMap {
 	name := fmt.Sprintf("%s-random", nameStub)
 	pb := progressbar.New((nMax - nMin) / nStep)
 
@@ -70,4 +75,6 @@ func runRandom(comparison cover.Comparison, weigher graph.Weigher, nameStub stri
 
 	f, _ := os.Create(fmt.Sprintf("out/%s.html", name))
 	page.Render(io.MultiWriter(f))
+
+	return heatMap
 }
