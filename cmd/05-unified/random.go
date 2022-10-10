@@ -63,7 +63,7 @@ func runRandom(
 		nIndex++
 	}
 
-	heatMap := heatMapBase(name, ns)
+	heatMap := heatMapBase(name, "p", "n", ns)
 	heatMap.SetXAxis(ps).AddSeries("means", series)
 	heatMap.Validate()
 	write(name, heatMap)

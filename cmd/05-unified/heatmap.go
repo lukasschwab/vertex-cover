@@ -10,25 +10,26 @@ import (
 )
 
 // heatMapBase returns a baseline heatmap for any test.
-func heatMapBase(name string, yAxisData interface{}) *charts.HeatMap {
+func heatMapBase(name, xLabel, yLabel string, yAxisData interface{}) *charts.HeatMap {
 	hm := charts.NewHeatMap()
 	hm.SetGlobalOptions(
 		charts.WithTitleOpts(opts.Title{
 			Title: name,
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
-			Name:      "p",
+			Name:      xLabel,
 			Type:      "category",
 			SplitArea: &opts.SplitArea{Show: true},
 		}),
 		charts.WithYAxisOpts(opts.YAxis{
-			Name: "n",
+			Name: yLabel,
 			Type: "category",
 			Data: yAxisData,
 			AxisLabel: &opts.AxisLabel{
 				Show:         true,
 				ShowMinLabel: true,
 				ShowMaxLabel: true,
+				Inside:       true,
 			},
 			SplitArea: &opts.SplitArea{Show: true},
 		}),

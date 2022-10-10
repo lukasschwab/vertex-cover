@@ -63,7 +63,7 @@ func runTricky(
 		aIndex++
 	}
 
-	heatMap := heatMapBase(name, as)
+	heatMap := heatMapBase(name, "k", "a", as)
 	heatMap.SetXAxis(ks).AddSeries("means", series)
 	heatMap.Validate()
 	write(name, heatMap)
