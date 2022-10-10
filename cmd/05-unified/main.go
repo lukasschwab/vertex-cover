@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
-	"os"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/components"
@@ -14,6 +12,8 @@ import (
 
 // reps for which to run a given experiment.
 const reps = 10
+
+var logger = log.Default()
 
 // baselineStrategy for all comparisons: always Vazirani.
 func baselineStrategy(g *graph.Weighted) cover.Strategy {
@@ -36,14 +36,14 @@ var comparisons = map[string]cover.Comparison{
 }
 
 var weighers = map[string]graph.Weigher{
-	"uniform":        graph.Uniform,
-	"random":         graph.Random,
-	"degreeNegative": graph.DegreeNegative,
-	"degreePositive": graph.DegreePositive,
+	"uniform":                   graph.Uniform,
+	"random":                    graph.Random,
+	"degreeNegative":            graph.DegreeNegative,
+	"degreePositive":            graph.DegreePositive,
+	"degreePositiveSuperlinear": graph.DegreePositiveSuperlinear,
 }
 
 func main() {
-	logger := log.Default()
 	allHeatMaps := []components.Charter{}
 
 	for strategyName, comparison := range comparisons {
@@ -54,12 +54,7 @@ func main() {
 			allHeatMaps = append(allHeatMaps, random, tricky)
 		}
 	}
-
-	logger.Printf("Rendering unified page.")
-	page := components.NewPage()
-	page.AddCharts(allHeatMaps...)
-	f, _ := os.Create("out/unified.html")
-	page.Render(io.MultiWriter(f))
+	write("unified", allHeatMaps...)
 }
 
 func run(comparison cover.Comparison, weigher graph.Weigher, nameStub string) (random, tricky *charts.HeatMap) {

@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/go-echarts/go-echarts/v2/charts"
+	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
 )
 
@@ -39,4 +43,15 @@ func heatMapBase(name string, yAxisData interface{}) *charts.HeatMap {
 		}),
 	)
 	return hm
+}
+
+// write a page of graphs.
+func write(name string, graphs ...components.Charter) {
+	logger.Printf("Rendering %v page...", name)
+	page := components.NewPage().AddCharts(graphs...)
+	if f, err := os.Create(fmt.Sprintf("out/%s.html", name)); err != nil {
+		logger.Fatalf("Couldn't create output file '%s': %v", name, err)
+	} else if err := page.Render(f); err != nil {
+		logger.Printf("Error writing graph '%s': %v", name, err)
+	}
 }

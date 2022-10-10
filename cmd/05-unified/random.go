@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"os"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
-	"github.com/go-echarts/go-echarts/v2/components"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/lukasschwab/vertex-cover/pkg/cover"
 	"github.com/lukasschwab/vertex-cover/pkg/graph"
@@ -69,12 +66,7 @@ func runRandom(
 	heatMap := heatMapBase(name, ns)
 	heatMap.SetXAxis(ps).AddSeries("means", series)
 	heatMap.Validate()
-
-	page := components.NewPage()
-	page.AddCharts(heatMap)
-
-	f, _ := os.Create(fmt.Sprintf("out/%s.html", name))
-	page.Render(io.MultiWriter(f))
+	write(name, heatMap)
 
 	return heatMap
 }
