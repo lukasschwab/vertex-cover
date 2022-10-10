@@ -46,11 +46,11 @@ func (d degreeNegative) weigh(v Vertex, ns *Neighbors) float32 {
 type degreePositive struct{}
 
 func (d degreePositive) weigh(v Vertex, ns *Neighbors) float32 {
-	return float32(ns.Length())
+	return float32(ns.Length()) + 0.1
 }
 
 type degreePositiveSuperlinear struct{}
 
 func (d degreePositiveSuperlinear) weigh(v Vertex, ns *Neighbors) float32 {
-	return float32(ns.Length() * ns.Length())
+	return float32(ns.Length()*ns.Length()) + 0.1
 }
